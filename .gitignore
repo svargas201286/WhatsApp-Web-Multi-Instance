@@ -47,3 +47,7 @@ build/
 *.bak
 *.backup
 
+# PM2
+.pm2/
+*.log
+

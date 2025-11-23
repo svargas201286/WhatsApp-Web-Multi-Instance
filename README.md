@@ -57,13 +57,26 @@ notepad C:\Windows\System32\drivers\etc\hosts
 
 O ejecuta el script `configurar-hosts.bat` como administrador.
 
-### 4. Iniciar el servidor proxy
+### 4. Instalación Automática (Recomendado)
 
-```powershell
-npm start
-```
+Para ejecutar el proxy automáticamente como servicio y eliminar la advertencia de seguridad:
 
-El servidor se iniciará en el puerto 8443. Los certificados SSL se generarán automáticamente la primera vez.
+1. **Ejecuta `instalar-servicio.bat` como administrador** (clic derecho → "Ejecutar como administrador")
+
+   Este script:
+   - Instala PM2 (gestor de procesos)
+   - Instala el certificado CA de confianza (elimina la advertencia "No es seguro")
+   - Configura el proxy como servicio de Windows
+   - El proxy se iniciará automáticamente al encender tu PC
+
+2. **Alternativa manual**:
+   ```powershell
+   # Instalar certificado CA (elimina advertencia de seguridad)
+   npm run install-ca
+   
+   # Iniciar proxy manualmente
+   npm start
+   ```
 
 ### 5. Cargar la extensión en Chrome
 
@@ -74,19 +87,41 @@ El servidor se iniciará en el puerto 8443. Los certificados SSL se generarán a
 
 ## 🎯 Uso
 
-1. **Asegúrate de que el proxy esté ejecutándose** (`npm start`)
+1. **Si instalaste el servicio automático**: El proxy ya está ejecutándose. Si no, ejecuta `npm start` o `iniciar-proxy.bat`
 
 2. **Abre instancias de WhatsApp Web**:
    - Haz clic en el icono de la extensión
    - Selecciona qué instancia quieres abrir (1-10)
    - O simplemente navega a `https://wa1.localhost:8443`, `https://wa2.localhost:8443`, etc.
 
-3. **Primera vez**: Chrome mostrará una advertencia de seguridad porque los certificados son autofirmados:
-   - Haz clic en "Avanzado"
-   - Luego en "Continuar a waN.localhost (no seguro)"
-   - Esto solo ocurre la primera vez por dominio
+3. **Si instalaste el certificado CA**: No verás ninguna advertencia de seguridad. Si no lo instalaste:
+   - Chrome mostrará "No es seguro" la primera vez
+   - Haz clic en "Avanzado" → "Continuar a waN.localhost (no seguro)"
+   - Para eliminar esta advertencia permanentemente, ejecuta `instalar-certificado-ca.bat` como administrador
 
 4. **Escanea el código QR** en cada instancia para iniciar sesión con diferentes números de celular
+
+## 🔧 Gestión del Servicio (Si instalaste PM2)
+
+Si instalaste el servicio automático, puedes gestionarlo con estos comandos:
+
+```bash
+# Ver estado del proxy
+pm2 status
+
+# Ver logs en tiempo real
+pm2 logs whatsapp-proxy
+
+# Reiniciar el proxy
+pm2 restart whatsapp-proxy
+
+# Detener el proxy
+pm2 stop whatsapp-proxy
+
+# Eliminar el servicio
+pm2 delete whatsapp-proxy
+# O ejecuta: desinstalar-servicio.bat
+```
 
 ## 📁 Estructura del Proyecto
 
@@ -114,7 +149,9 @@ El servidor se iniciará en el puerto 8443. Los certificados SSL se generarán a
 ## ⚠️ Notas Importantes
 
 - El proxy debe estar ejecutándose para que la extensión funcione
-- Los certificados autofirmados generan advertencias de seguridad (normal en desarrollo)
+- **Recomendado**: Instala el servicio automático (`instalar-servicio.bat`) para:
+  - Ejecutar el proxy automáticamente al iniciar Windows
+  - Eliminar la advertencia "No es seguro" en Chrome
 - WhatsApp puede detectar múltiples sesiones simultáneas (úsalo bajo tu propio riesgo)
 - Esta extensión es solo para uso personal y educativo
 
@@ -125,10 +162,11 @@ El servidor se iniciará en el puerto 8443. Los certificados SSL se generarán a
 - Verifica que el puerto 8443 no esté en uso
 - Revisa la consola del proxy para ver errores
 
-### Error de certificado SSL
-- Acepta la advertencia de seguridad la primera vez
+### Error de certificado SSL / "No es seguro"
+- **Solución permanente**: Ejecuta `instalar-certificado-ca.bat` como administrador
+- Si no puedes instalar el certificado CA, acepta la advertencia la primera vez
 - Si persiste, elimina `server.key` y `server.crt` y reinicia el proxy
-- O instala el certificado CA ejecutando `instalar-certificado-ca.bat` como administrador
+- Después de instalar el certificado CA, cierra completamente Chrome y vuelve a abrirlo
 
 ### La extensión no redirige
 - Verifica que tengas los permisos correctos en `manifest.json`
