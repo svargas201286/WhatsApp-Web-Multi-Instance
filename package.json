@@ -1,0 +1,23 @@
+{
+  "name": "wa-multi-proxy",
+  "version": "1.0.0",
+  "main": "proxy.js",
+  "scripts": {
+    "start": "node proxy.js",
+    "setup-certs": "node setup-certificates.js",
+    "install-ca": "node instalar-certificado-ca.js",
+    "check": "node verificar-proxy.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-proxy": "^1.18.1",
+    "selfsigned": "^2.4.1"
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
+  }
+}

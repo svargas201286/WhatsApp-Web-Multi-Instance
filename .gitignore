@@ -1,0 +1,49 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Certificados SSL (se generan automáticamente)
+server.key
+server.crt
+ca.key
+ca.crt
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos del editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archivos temporales
+*.tmp
+*.temp
+.cache/
+
+# Archivos de build (si los hay)
+dist/
+build/
+
+# Variables de entorno
+.env
+.env.local
+.env.*.local
+
+# Archivos de Windows
+*.lnk
+
+# Archivos de backup
+*.bak
+*.backup
+
