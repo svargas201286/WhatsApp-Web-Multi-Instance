@@ -20,10 +20,9 @@ Extensión de Chrome que permite abrir múltiples instancias independientes de W
 
 ### 1. Clonar o descargar el proyecto
 
-Si clonas desde Git:
 ```bash
-git clone [URL_DEL_REPOSITORIO]
-cd "MULTIPLE WHATSAPP WEB"
+git clone https://github.com/svargas201286/WhatsApp-Web-Multi-Instance.git
+cd WhatsApp-Web-Multi-Instance
 ```
 
 ### 2. Instalar dependencias
@@ -34,7 +33,7 @@ npm install
 
 **Nota:** Esto instalará automáticamente todas las dependencias necesarias. Si hay errores, ver la sección de [Solución de Problemas](#-solución-de-problemas).
 
-### 2. Configurar archivo hosts (Recomendado)
+### 3. Configurar archivo hosts (Recomendado)
 
 Edita el archivo `C:\Windows\System32\drivers\etc\hosts` como administrador y agrega:
 
@@ -56,7 +55,9 @@ Edita el archivo `C:\Windows\System32\drivers\etc\hosts` como administrador y ag
 notepad C:\Windows\System32\drivers\etc\hosts
 ```
 
-### 3. Iniciar el servidor proxy
+O ejecuta el script `configurar-hosts.bat` como administrador.
+
+### 4. Iniciar el servidor proxy
 
 ```powershell
 npm start
@@ -64,21 +65,12 @@ npm start
 
 El servidor se iniciará en el puerto 8443. Los certificados SSL se generarán automáticamente la primera vez.
 
-### 4. Cargar la extensión en Chrome
+### 5. Cargar la extensión en Chrome
 
 1. Abre Chrome y ve a `chrome://extensions/`
 2. Activa el "Modo de desarrollador" (Developer mode) en la esquina superior derecha
 3. Haz clic en "Cargar extensión sin empaquetar" (Load unpacked)
 4. Selecciona la carpeta **`extension`** dentro del proyecto
-
-### 5. Crear iconos (Opcional)
-
-La extensión necesita iconos. Puedes:
-- Crear iconos manualmente (16x16, 48x48, 128x128 píxeles)
-- Usar un generador online como [favicon-generator.org](https://www.favicon-generator.org/)
-- Usar el archivo `create-icons.html` incluido
-
-Coloca los archivos `icon16.png`, `icon48.png` e `icon128.png` en la raíz del proyecto.
 
 ## 🎯 Uso
 
@@ -94,16 +86,19 @@ Coloca los archivos `icon16.png`, `icon48.png` e `icon128.png` en la raíz del p
    - Luego en "Continuar a waN.localhost (no seguro)"
    - Esto solo ocurre la primera vez por dominio
 
-4. **Escanea el código QR** en cada instancia para iniciar sesión
+4. **Escanea el código QR** en cada instancia para iniciar sesión con diferentes números de celular
 
 ## 📁 Estructura del Proyecto
 
 ```
 .
-├── manifest.json          # Configuración de la extensión
-├── background.js          # Service worker que intercepta peticiones
-├── popup.html            # Interfaz del popup
-├── popup.js              # Lógica del popup
+├── extension/             # Archivos de la extensión de Chrome
+│   ├── manifest.json
+│   ├── background.js
+│   ├── content.js
+│   ├── popup.html
+│   ├── popup.js
+│   └── icon*.png
 ├── proxy.js              # Servidor proxy local
 ├── package.json          # Dependencias de Node.js
 └── README.md            # Este archivo
@@ -133,6 +128,7 @@ Coloca los archivos `icon16.png`, `icon48.png` e `icon128.png` en la raíz del p
 ### Error de certificado SSL
 - Acepta la advertencia de seguridad la primera vez
 - Si persiste, elimina `server.key` y `server.crt` y reinicia el proxy
+- O instala el certificado CA ejecutando `instalar-certificado-ca.bat` como administrador
 
 ### La extensión no redirige
 - Verifica que tengas los permisos correctos en `manifest.json`
@@ -142,4 +138,3 @@ Coloca los archivos `icon16.png`, `icon48.png` e `icon128.png` en la raíz del p
 ## 📝 Licencia
 
 Este proyecto es de código abierto y está disponible para uso personal y educativo.
-
