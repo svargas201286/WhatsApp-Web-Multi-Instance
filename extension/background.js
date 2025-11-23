@@ -112,3 +112,31 @@ chrome.runtime.onStartup.addListener(() => {
   });
 });
 
+// Recargar pestañas de WhatsApp Web cuando se actualiza la extensión
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'update' || details.reason === 'install') {
+    // Buscar todas las pestañas de WhatsApp Web y dominios virtuales
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        if (tab.url) {
+          // Recargar si es web.whatsapp.com o cualquier wa*.localhost
+          if (tab.url.includes('web.whatsapp.com') || 
+              tab.url.includes('wa') && tab.url.includes('.localhost:8443')) {
+            chrome.tabs.reload(tab.id, () => {
+              if (chrome.runtime.lastError) {
+                console.log('No se pudo recargar la pestaña:', tab.id);
+              }
+            });
+          }
+        }
+      });
+    });
+  }
+});
+
+// También recargar cuando el service worker se activa (útil para actualizaciones)
+chrome.runtime.onConnect.addListener((port) => {
+  // Si hay una conexión, significa que el content script está activo
+  // Si se pierde la conexión, podría ser porque se actualizó la extensión
+});
+

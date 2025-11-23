@@ -6,25 +6,56 @@
 
   const PROXY_PORT = 8443;
 
+  // Función para verificar que el runtime esté disponible
+  function isRuntimeAvailable() {
+    try {
+      return chrome && chrome.runtime && chrome.runtime.id;
+    } catch (e) {
+      return false;
+    }
+  }
+
   // Función para obtener el siguiente dominio disponible (mediante mensaje al background)
   async function getNextAvailableDomain() {
+    if (!isRuntimeAvailable()) {
+      console.warn('Extension context invalidated. Recarga la página.');
+      return null;
+    }
+    
     return new Promise((resolve) => {
-      chrome.runtime.sendMessage(
-        { action: 'getNextDomain' },
-        (response) => {
-          if (chrome.runtime.lastError) {
-            console.error('Error:', chrome.runtime.lastError);
-            resolve(null);
-          } else {
-            resolve(response?.domain || null);
+      try {
+        chrome.runtime.sendMessage(
+          { action: 'getNextDomain' },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              // Si el contexto está invalidado, no mostrar error
+              if (chrome.runtime.lastError.message.includes('Extension context invalidated')) {
+                console.warn('Extension context invalidated. Recarga la página.');
+                resolve(null);
+              } else {
+                console.error('Error:', chrome.runtime.lastError);
+                resolve(null);
+              }
+            } else {
+              resolve(response?.domain || null);
+            }
           }
-        }
-      );
+        );
+      } catch (error) {
+        console.warn('Error al enviar mensaje:', error);
+        resolve(null);
+      }
     });
   }
 
   // Función para crear el botón
   function createButton() {
+    // Verificar si el runtime está disponible
+    if (!isRuntimeAvailable()) {
+      // Si la extensión se recargó, no crear el botón
+      return;
+    }
+    
     // Verificar si el botón ya existe
     if (document.getElementById('wa-multi-open-btn')) {
       return;
@@ -59,22 +90,51 @@
     `;
 
     button.addEventListener('click', async () => {
+      // Verificar que el runtime esté disponible
+      if (!isRuntimeAvailable()) {
+        alert('La extensión se ha recargado. Por favor, recarga esta página (F5) para continuar.');
+        return;
+      }
+      
       // Enviar mensaje al background para abrir nueva instancia
-      chrome.runtime.sendMessage(
-        { action: 'openInstance' },
-        (response) => {
-          if (chrome.runtime.lastError) {
-            console.error('Error:', chrome.runtime.lastError);
-            alert('Error al abrir nueva instancia. Verifica que el proxy esté ejecutándose.');
-          } else if (!response || !response.success) {
-            alert('Todas las instancias están en uso (máximo 10) o el proxy no está ejecutándose.');
+      try {
+        chrome.runtime.sendMessage(
+          { action: 'openInstance' },
+          (response) => {
+            if (chrome.runtime.lastError) {
+              // Si el contexto está invalidado, mostrar mensaje específico
+              if (chrome.runtime.lastError.message.includes('Extension context invalidated')) {
+                alert('La extensión se ha recargado. Por favor, recarga esta página (F5) y vuelve a intentar.');
+              } else {
+                console.error('Error:', chrome.runtime.lastError);
+                alert('Error al abrir nueva instancia. Verifica que el proxy esté ejecutándose.');
+              }
+            } else if (!response || !response.success) {
+              alert('Todas las instancias están en uso (máximo 10) o el proxy no está ejecutándose.');
+            }
           }
-        }
-      );
+        );
+      } catch (error) {
+        console.error('Error al enviar mensaje:', error);
+        alert('Error de comunicación con la extensión. Recarga la página (F5) y vuelve a intentar.');
+      }
     });
 
     document.body.appendChild(button);
   }
+
+  // Detectar si el contexto de la extensión se invalidó y recargar automáticamente
+  function checkExtensionContext() {
+    if (!isRuntimeAvailable()) {
+      // Si el contexto está invalidado, recargar la página automáticamente
+      console.log('Extension context invalidated. Recargando página...');
+      window.location.reload();
+      return;
+    }
+  }
+
+  // Verificar el contexto periódicamente
+  setInterval(checkExtensionContext, 2000); // Verificar cada 2 segundos
 
   // Esperar a que la página cargue completamente
   if (document.readyState === 'loading') {
