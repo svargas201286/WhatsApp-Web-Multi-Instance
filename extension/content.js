@@ -66,26 +66,28 @@
     button.innerHTML = `
       <div style="
         position: fixed;
-        bottom: 20px;
+        top: 80px;
         right: 20px;
         z-index: 9999;
+        width: 40px;
+        height: 40px;
         background: #25D366;
         color: white;
-        padding: 12px 20px;
-        border-radius: 25px;
+        border-radius: 50%;
         cursor: pointer;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        font-size: 14px;
-        font-weight: 500;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transition: all 0.2s;
         display: flex;
         align-items: center;
-        gap: 8px;
-      " onmouseover="this.style.background='#20BA5A'; this.style.transform='scale(1.05)'" 
-         onmouseout="this.style.background='#25D366'; this.style.transform='scale(1)'">
-        <span>➕</span>
-        <span>Abrir otra instancia</span>
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        transition: all 0.2s;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 1;
+      " 
+         title="Abrir otra instancia de WhatsApp Web"
+         onmouseover="this.style.background='#20BA5A'; this.style.transform='scale(1.1)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.3)'" 
+         onmouseout="this.style.background='#25D366'; this.style.transform='scale(1)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.2)'">
+        +
       </div>
     `;
 

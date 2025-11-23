@@ -88,9 +88,7 @@ proxy.on('error', function(err, req, res) {
 
 // Interceptar respuestas para modificar el contenido
 proxy.on('proxyRes', function(proxyRes, req, res) {
-  // Asegurar headers correctos
-  delete proxyRes.headers['x-frame-options'];
-  delete proxyRes.headers['content-security-policy'];
+  // Mantener headers CSP y x-frame-options para que el CRM funcione correctamente
   
   // Si es HTML, modificar el contenido
   const contentType = proxyRes.headers['content-type'] || '';

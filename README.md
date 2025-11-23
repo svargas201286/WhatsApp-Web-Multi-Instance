@@ -1,4 +1,4 @@
-# Multiple WhatsApp Web - Extensión de Chrome
+# WhatsApp Web Multi-Instance
 
 Extensión de Chrome que permite abrir múltiples instancias independientes de WhatsApp Web usando dominios virtuales locales.
 

@@ -26,7 +26,7 @@ if %errorlevel% equ 0 (
 :: Agregar entradas al archivo hosts
 (
     echo.
-    echo # Multiple WhatsApp Web - Dominios virtuales
+    echo # WhatsApp Web Multi-Instance - Dominios virtuales
     echo 127.0.0.1 wa1.localhost
     echo 127.0.0.1 wa2.localhost
     echo 127.0.0.1 wa3.localhost

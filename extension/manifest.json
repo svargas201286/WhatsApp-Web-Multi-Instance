@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Multiple WhatsApp Web",
+  "name": "WhatsApp Web Multi-Instance",
   "version": "1.0.0",
   "description": "Abre múltiples instancias independientes de WhatsApp Web usando dominios virtuales",
   "permissions": [
@@ -39,9 +39,22 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://web.whatsapp.com/*"],
+      "matches": [
+        "https://web.whatsapp.com/*",
+        "https://wa1.localhost:8443/*",
+        "https://wa2.localhost:8443/*",
+        "https://wa3.localhost:8443/*",
+        "https://wa4.localhost:8443/*",
+        "https://wa5.localhost:8443/*",
+        "https://wa6.localhost:8443/*",
+        "https://wa7.localhost:8443/*",
+        "https://wa8.localhost:8443/*",
+        "https://wa9.localhost:8443/*",
+        "https://wa10.localhost:8443/*"
+      ],
       "js": ["content.js"],
-      "run_at": "document_end"
+      "run_at": "document_end",
+      "all_frames": false
     }
   ]
 }

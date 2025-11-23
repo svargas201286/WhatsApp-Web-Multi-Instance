@@ -1,5 +1,5 @@
 {
-  "name": "wa-multi-proxy",
+  "name": "whatsapp-web-multi-instance",
   "version": "1.0.0",
   "main": "proxy.js",
   "scripts": {
