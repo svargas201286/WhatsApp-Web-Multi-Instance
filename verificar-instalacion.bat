@@ -47,7 +47,7 @@ if errorlevel 1 (
     pm2 list | findstr "whatsapp-proxy" >nul 2>&1
     if errorlevel 1 (
         echo [!] El servicio NO esta ejecutandose
-        echo     Instala el servicio con: instalar-servicio.bat
+        echo     Instala el servicio con: instalar-todo.bat
     ) else (
         echo [OK] El servicio esta ejecutandose
     )

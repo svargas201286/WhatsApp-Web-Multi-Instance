@@ -18,6 +18,16 @@ call pm2 delete whatsapp-proxy 2>nul
 call pm2 save 2>nul
 
 echo.
+echo Desconfigurando inicio automatico...
+call pm2-startup uninstall 2>nul
+if errorlevel 1 (
+    echo ADVERTENCIA: No se pudo desconfigurar el inicio automatico
+    echo Puede que pm2-windows-startup no este instalado
+) else (
+    echo [OK] Inicio automatico desconfigurado
+)
+
+echo.
 echo ========================================
 echo   Servicio Desinstalado
 echo ========================================

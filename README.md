@@ -57,20 +57,28 @@ notepad C:\Windows\System32\drivers\etc\hosts
 
 O ejecuta el script `configurar-hosts.bat` como administrador.
 
-### 4. Instalación Automática (Recomendado)
+### 4. Instalación Automática Completa (Recomendado)
 
 Para ejecutar el proxy automáticamente como servicio y eliminar la advertencia de seguridad:
 
-1. **Ejecuta `instalar-servicio.bat` como administrador** (clic derecho → "Ejecutar como administrador")
+1. **Ejecuta `instalar-todo.bat` como administrador** (clic derecho → "Ejecutar como administrador")
 
-   Este script:
-   - Instala PM2 (gestor de procesos)
-   - Instala el certificado CA de confianza (elimina la advertencia "No es seguro")
-   - Configura el proxy como servicio de Windows
-   - El proxy se iniciará automáticamente al encender tu PC
+   Este script ejecuta automáticamente:
+   - ✅ Configura el archivo hosts (wa1.localhost, wa2.localhost, etc.)
+   - ✅ Instala todas las dependencias de Node.js
+   - ✅ Instala PM2 y pm2-windows-startup (gestor de procesos)
+   - ✅ Instala el certificado CA de confianza (elimina la advertencia "No es seguro")
+   - ✅ Inicia el proxy con PM2
+   - ✅ Configura el inicio automático con Windows
+   - ✅ El proxy se iniciará automáticamente al encender tu PC
 
-2. **Alternativa manual**:
+   **Todo se ejecuta automáticamente sin intervención manual.**
+
+2. **Alternativa manual** (si prefieres hacerlo paso a paso):
    ```powershell
+   # Configurar hosts
+   configurar-hosts.bat
+   
    # Instalar certificado CA (elimina advertencia de seguridad)
    npm run install-ca
    
@@ -87,7 +95,7 @@ Para ejecutar el proxy automáticamente como servicio y eliminar la advertencia 
 
 ## 🎯 Uso
 
-1. **Si instalaste el servicio automático**: El proxy ya está ejecutándose. Si no, ejecuta `npm start` o `iniciar-proxy.bat`
+1. **Si instalaste el servicio automático**: El proxy ya está ejecutándose. Si no, ejecuta `npm start` o usa `reparar-servicio.bat` para iniciarlo con PM2
 
 2. **Abre instancias de WhatsApp Web**:
    - Haz clic en el icono de la extensión
@@ -127,16 +135,22 @@ pm2 delete whatsapp-proxy
 
 ```
 .
-├── extension/             # Archivos de la extensión de Chrome
+├── extension/                  # Archivos de la extensión de Chrome
 │   ├── manifest.json
 │   ├── background.js
 │   ├── content.js
 │   ├── popup.html
 │   ├── popup.js
 │   └── icon*.png
-├── proxy.js              # Servidor proxy local
-├── package.json          # Dependencias de Node.js
-└── README.md            # Este archivo
+├── proxy.js                    # Servidor proxy local
+├── package.json                # Dependencias de Node.js
+├── instalar-todo.bat           # Instalación completa automática (RECOMENDADO)
+├── configurar-hosts.bat        # Configurar archivo hosts
+├── instalar-certificado-ca.bat # Instalar certificado CA
+├── reparar-servicio.bat        # Reparar servicio si no funciona
+├── desinstalar-servicio.bat    # Desinstalar servicio
+├── verificar-instalacion.bat   # Verificar estado de la instalación
+└── README.md                   # Este archivo
 ```
 
 ## 🔒 Seguridad
@@ -149,18 +163,22 @@ pm2 delete whatsapp-proxy
 ## ⚠️ Notas Importantes
 
 - El proxy debe estar ejecutándose para que la extensión funcione
-- **Recomendado**: Instala el servicio automático (`instalar-servicio.bat`) para:
+- **Recomendado**: Instala el servicio automático (`instalar-todo.bat`) para:
   - Ejecutar el proxy automáticamente al iniciar Windows
   - Eliminar la advertencia "No es seguro" en Chrome
+  - Configurar todo automáticamente sin pasos manuales
 - WhatsApp puede detectar múltiples sesiones simultáneas (úsalo bajo tu propio riesgo)
 - Esta extensión es solo para uso personal y educativo
 
 ## 🐛 Solución de Problemas
 
 ### Error: "No se puede conectar"
-- Verifica que el proxy esté ejecutándose (`npm start`)
+- Verifica que el proxy esté ejecutándose:
+  - Si usas PM2: `pm2 status` o `verificar-instalacion.bat`
+  - Si no usas PM2: `npm start`
 - Verifica que el puerto 8443 no esté en uso
 - Revisa la consola del proxy para ver errores
+- Si el servicio no está ejecutándose, usa `reparar-servicio.bat` como administrador
 
 ### Error de certificado SSL / "No es seguro"
 - **Solución permanente**: Ejecuta `instalar-certificado-ca.bat` como administrador

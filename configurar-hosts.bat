@@ -1,4 +1,8 @@
 @echo off
+REM Si se llama con /AUTO, no muestra pausas
+set AUTO_MODE=%1
+if "%AUTO_MODE%"=="/AUTO" goto :auto_mode
+
 echo ========================================
 echo   Configurar archivo hosts
 echo ========================================
@@ -10,6 +14,7 @@ echo NOTA: Requiere permisos de Administrador
 echo.
 pause
 
+:auto_mode
 echo.
 echo Agregando entradas al archivo hosts...
 echo.
@@ -17,10 +22,10 @@ echo.
 :: Verificar si ya existen las entradas
 findstr /C:"wa1.localhost" C:\Windows\System32\drivers\etc\hosts >nul 2>&1
 if %errorlevel% equ 0 (
-    echo Las entradas ya existen en el archivo hosts.
+    echo [OK] Las entradas ya existen en el archivo hosts.
     echo.
-    pause
-    exit /b
+    if not "%AUTO_MODE%"=="/AUTO" pause
+    exit /b 0
 )
 
 :: Agregar entradas al archivo hosts
@@ -41,22 +46,28 @@ if %errorlevel% equ 0 (
 
 if %errorlevel% equ 0 (
     echo.
-    echo ✅ Entradas agregadas exitosamente!
+    echo [OK] Entradas agregadas exitosamente!
     echo.
-    echo Ahora puedes usar:
-    echo   - https://wa1.localhost:8443
-    echo   - https://wa2.localhost:8443
-    echo   - etc.
-    echo.
+    if not "%AUTO_MODE%"=="/AUTO" (
+        echo Ahora puedes usar:
+        echo   - https://wa1.localhost:8443
+        echo   - https://wa2.localhost:8443
+        echo   - etc.
+        echo.
+    )
 ) else (
     echo.
-    echo ❌ Error: No se pudieron agregar las entradas.
+    echo [ERROR] No se pudieron agregar las entradas.
     echo.
-    echo Por favor, ejecuta este script como Administrador:
-    echo   1. Clic derecho en este archivo
-    echo   2. Selecciona "Ejecutar como administrador"
-    echo.
+    if not "%AUTO_MODE%"=="/AUTO" (
+        echo Por favor, ejecuta este script como Administrador:
+        echo   1. Clic derecho en este archivo
+        echo   2. Selecciona "Ejecutar como administrador"
+        echo.
+        pause
+    )
+    exit /b 1
 )
 
-pause
+if not "%AUTO_MODE%"=="/AUTO" pause
 
